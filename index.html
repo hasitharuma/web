@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>University of Peradeniya Hostels</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    body { margin:0; padding:0; display:flex; height:100vh; font-family: Arial; }
+    #sidebar {
+      width: 250px;
+      background: #f0f0f0;
+      padding: 15px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+      display:flex;
+      flex-direction:column;
+    }
+    #map { flex:1; }
+    select, button { margin-top: 10px; padding:5px; font-size: 14px; }
+    .legend { 
+      background: white; 
+      padding: 10px; 
+      line-height: 20px;
+      border: 1px solid gray;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      z-index: 1000;
+    }
+    .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="sidebar">
+    <h3>Select Your Hostel</h3>
+    <select id="hostelSelect">
+      <option value="">--Select Hostel--</option>
+    </select>
+    <button id="goButton" style="display:none;">Go to Google Maps</button>
+  </div>
+
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Hostel Data
+    const hostels = [
+      {name: "Akbar Nell Hostel", cap: 590, gender: "Male", lat: 7.251350307890226, lng: 80.59131675303537},
+      {name: "Arunachalam Hostel", cap: 183, gender: "Male", lat: 7.257777849999774, lng: 80.59997152234868},
+      {name: "AQ 40 Hostel", cap: 30, gender: "Male", lat: 7.269859363092512, lng: 80.60587106652802},
+      {name: "Ivor Jennings Hostel", cap: 524, gender: "Male", lat: 7.257145935872212, lng: 80.60213931070716},
+      {name: "James Peiris Hostel", cap: 244, gender: "Male", lat: 7.250249992756303, lng: 80.59809433954291},
+      {name: "Jayathilaka Hostel", cap: 186, gender: "Male", lat: 7.259390935734632, lng: 80.60010036837886},
+      {name: "Marcus Fernando Hostel", cap: 246, gender: "Male", lat: 7.250341378857159, lng: 80.5994354051543},
+      {name: "Mars Hostel", cap: 234, gender: "Male", lat: 7.262453507880944, lng: 80.60159773769207},
+      {name: "Sangaramaya & Kehelpannala Bikkhu Hostel", cap: 123, gender: "Male", lat: 7.256785746681601, lng: 80.59248767130516}, // boys
+      {name: "Senaka Bibile Hostel", cap: 294, gender: "Male", lat: 7.2692886205444, lng: 80.60484676652806},
+      {name: "New Akbar Hostel", cap: 136, gender: "Male", lat: 7.251386352108106, lng: 80.59312482605048},
+      {name: "Hindagal Hostel", cap: 57, gender: "Male", lat: 7.241953400574267, lng: 80.59899125998696},
+      {name: "Lalith Athulathmudali Hostel", cap: 380, gender: "Female", lat: 7.2608648067558, lng: 80.60351430885622},
+      {name: "Sarasaviuyana Hostel", cap: 146, gender: "Female", lat: 7.2654227792774435, lng: 80.6009323511846},
+      {name: "Ramanathan Hostel", cap: 1215, gender: "Female", lat: 7.246108710516654, lng: 80.59734295648526},
+      {name: "Sangamiththa Hostel", cap: 656, gender: "Female", lat: 7.249151579902517, lng: 80.59735590933325},
+      {name: "Wijewardana Hostel", cap: 804, gender: "Female", lat: 7.260904877556568, lng: 80.59942231377367},
+      {name: "Hilda Obeysekara Hostel", cap: 656, gender: "Female", lat: 7.250441976444684, lng: 80.59683619721461},
+      {name: "Ediriweera Sarathchandra & Gunapala Malalasekara Hostel", cap: 647, gender: "Female", lat: 7.250567826153198, lng: 80.59429542262922},
+      {name: "Mahakanda Hostel", cap: 342, gender: "Female", lat: 7.227183052233934, lng: 80.6079636933847},
+      {name: "Sarasavi Medura Hostel", cap: 752, gender: "Female", lat: 7.246162196986149, lng: 80.59619835039932},
+      {name: "Mahailukpallama Boys Hostel", cap: 100, gender: "Male", lat: 8.096574320181638, lng: 80.44759487066037},
+      {name: "Mahailukpallama Girls Hostel", cap: 200, gender: "Female", lat: 8.096793530607316, lng: 80.44602042517381}
+    ];
+
+    // Map init
+    const map = L.map('map').setView([7.256, 80.597], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+
+    // Color function
+    function getColor(gender){
+      return gender === "Male" ? "blue" : "pink";
+    }
+
+    // Add markers
+    hostels.forEach(h=>{
+      const marker = L.circleMarker([h.lat, h.lng], {
+        radius: 8,
+        color: "black",
+        weight: 1,
+        fillColor: getColor(h.gender),
+        fillOpacity: 0.8
+      }).addTo(map);
+      marker.bindPopup(`<b>${h.name}</b><br>Capacity: ${h.cap}<br>Type: ${h.gender}`);
+    });
+
+    // Populate dropdown
+    const select = document.getElementById('hostelSelect');
+    hostels.forEach((h, idx)=>{
+      const option = document.createElement('option');
+      option.value = idx;
+      option.text = h.name;
+      select.appendChild(option);
+    });
+
+    const goButton = document.getElementById('goButton');
+    let selectedHostel = null;
+
+    select.addEventListener('change', function(){
+      const idx = this.value;
+      if(idx === ""){
+        goButton.style.display = "none";
+        selectedHostel = null;
+      } else {
+        selectedHostel = hostels[idx];
+        goButton.style.display = "block";
+        map.setView([selectedHostel.lat, selectedHostel.lng], 17);
+      }
+    });
+
+    goButton.addEventListener('click', function(){
+      if(selectedHostel){
+        window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedHostel.lat},${selectedHostel.lng}`,"_blank");
+      }
+    });
+
+    // Add Legend
+    const legend = L.control({position: 'bottomright'});
+    legend.onAdd = function(map){
+      const div = L.DomUtil.create('div','legend');
+      div.innerHTML += "<i style='background: blue'></i> Boys Hostel<br>";
+      div.innerHTML += "<i style='background: pink'></i> Girls Hostel<br>";
+      return div;
+    };
+    legend.addTo(map);
+
+  </script>
+</body>
+</html>
