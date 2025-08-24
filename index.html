@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
   <meta charset="utf-8" />
@@ -16,12 +16,12 @@
     #title-bar {
       position: absolute;
       top:0; left:0; right:0;
-      background-color: #7D1935; /* University theme color */
-      color: white;
+      background-color: #800000; /* University theme dark blue */
+      color: #FFD100; /* University yellow */
       font-size: 24px;
       font-weight: bold;
       text-align: center;
-      padding: 10px;
+      padding: 20px;
       z-index: 1000;
     }
 
@@ -47,7 +47,7 @@
       width: 220px;
     }
 
-    #sidebar h3 { margin-top:0; color:#7D1935; font-size:16px; }
+    #sidebar h3 { margin-top:0; color:#00274D; font-size:16px; }
     select, button { width: 100%; margin-top:5px; padding:5px; border-radius:5px; }
 
     /* Legend */
@@ -80,7 +80,7 @@
     <select id="hostelSelect">
       <option value="">-- Choose Hostel --</option>
     </select>
-    <button id="goMapsBtn" disabled>Go to Google Maps</button>
+    <button id="goMapsBtn" disabled>See Direction</button>
   </div>
 
   <div id="map"></div>
@@ -92,29 +92,29 @@
 
   <script>
     const hostels = [
-      {name: "Akbar Nell Hostel", cap: 590, gender: "Male", lat: 7.251350307890226, lng: 80.59131675303537, image:"images/akbar-nell.jpg"},
-      {name: "Arunachalam Hostel", cap: 183, gender: "Male", lat: 7.257777849999774, lng: 80.59997152234868, image:"images/arunachalam.jpg"},
-      {name: "AQ 40 Hostel", cap: 30, gender: "Male", lat: 7.269859363092512, lng: 80.60587106652802, image:"images/AQ.jpg"},
-      {name: "Ivor Jennings Hostel", cap: 524, gender: "Male", lat: 7.257145935872212, lng: 80.60213931070716, image:"images/Ivor.jpg"},
-      {name: "James Peiris Hostel", cap: 244, gender: "Male", lat: 7.250249992756303, lng: 80.59809433954291, image:"images/james-peris.jpg"},
-      {name: "Jayathilaka Hostel", cap: 186, gender: "Male", lat: 7.259390935734632, lng: 80.60010036837886, image:"images/jayathilaka.jpg"},
-      {name: "Marcus Fernando Hostel", cap: 246, gender: "Male", lat: 7.250341378857159, lng: 80.5994354051543, image:"images/MFH.jpg"},
-      {name: "Mars Hostel", cap: 234, gender: "Male", lat: 7.262453507880944, lng: 80.60159773769207, image:"images/marrs.jpg"},
-      {name: "Sangaramaya & Kehelpannala Bikkhu Hostel", cap: 123, gender: "Bikkhu", lat: 7.256785746681601, lng: 80.59248767130516, image:"images/sangamaya.jpg"},
-      {name: "Senaka Bibile Hostel", cap: 294, gender: "Male", lat: 7.2692886205444, lng: 80.60484676652806, image:"images/senakaa.jpg"},
-      {name: "New Akbar Hostel", cap: 136, gender: "Male", lat: 7.251386352108106, lng: 80.59312482605048, image:"images/newakbar.jpg"},
-      {name: "Hindagal Hostel", cap: 57, gender: "Male", lat: 7.241953400574267, lng: 80.59899125998696, image:"images/hidaga.jpg"},
-      {name: "Lalith Athulathmudali Hostel", cap: 380, gender: "Female", lat: 7.2608648067558, lng: 80.60351430885622, image:"images/falith.jpg"},
-      {name: "Sarasaviuyana Hostel", cap: 146, gender: "Female", lat: 7.2654227792774435, lng: 80.6009323511846, image:"images/uyana.jpg"},
-      {name: "Ramanathan Hostel", cap: 1215, gender: "Female", lat: 7.246108710516654, lng: 80.59734295648526, image:"images/ramanathan.jpg"},
-      {name: "Sangamiththa Hostel", cap: 656, gender: "Female", lat: 7.249151579902517, lng: 80.59735590933325, image:"images/sangamitta.jpg"},
-      {name: "Wijewardana Hostel", cap: 804, gender: "Female", lat: 7.260904877556568, lng: 80.59942231377367, image:"images/wije.jpg"},
-      {name: "Hilda Obeysekara Hostel", cap: 656, gender: "Female", lat: 7.250441976444684, lng: 80.59683619721461, image:"images/hilda.jpg"},
-      {name: "Ediriweera Sarathchandra & Gunapala Malalasekara Hostel", cap: 647, gender: "Female", lat: 7.250567826153198, lng: 80.59429542262922, image:"images/ediriweera-sarachchandra.jpg"},
-      {name: "Mahakanda Hostel", cap: 342, gender: "Female", lat: 7.227183052233934, lng: 80.6079636933847, image:"images/older.jpg"},
-      {name: "Sarasavi Medura Hostel", cap: 752, gender: "Female", lat: 7.246162196986149, lng: 80.59619835039932, image:"images/sarasavi.jpg"},
-      {name: "Mahailukpallama Boys Hostel", cap: 100, gender: "Male", lat: 8.096574320181638, lng: 80.44759487066037, image:"images/mhailuk.jpg"},
-      {name: "Mahailukpallama Girls Hostel", cap: 200, gender: "Female", lat: 8.096793530607316, lng: 80.44602042517381, image:"images/newakbar.jpg"}
+      {name: "Akbar Nell Hostel", cap: 590, gender: "Male", lat: 7.2513503, lng: 80.5913168, image:"images/akbar-nell.jpg"},
+      {name: "Arunachalam Hostel", cap: 183, gender: "Male", lat: 7.2577778, lng: 80.5999715, image:"images/arunachalam.jpg"},
+      {name: "AQ 40 Hostel", cap: 30, gender: "Male", lat: 7.2698594, lng: 80.6058711, image:"images/AQ.jpg"},
+      {name: "Ivor Jennings Hostel", cap: 524, gender: "Male", lat: 7.2571459, lng: 80.6021393, image:"images/Ivor.jpg"},
+      {name: "James Peiris Hostel", cap: 244, gender: "Male", lat: 7.25025, lng: 80.5980943, image:"images/james-peris.jpg"},
+      {name: "Jayathilaka Hostel", cap: 186, gender: "Male", lat: 7.2593909, lng: 80.6001004, image:"images/jayathilaka.jpg"},
+      {name: "Marcus Fernando Hostel", cap: 246, gender: "Male", lat: 7.2503414, lng: 80.5994354, image:"images/MFH.jpg"},
+      {name: "Mars Hostel", cap: 234, gender: "Male", lat: 7.2624535, lng: 80.6015977, image:"images/marrs.jpg"},
+      {name: "Sangaramaya & Kehelpannala Bikkhu Hostel", cap: 123, gender: "Bikkhu", lat: 7.2567857, lng: 80.5924877, image:"images/sangamaya.jpg"},
+      {name: "Senaka Bibile Hostel", cap: 294, gender: "Male", lat: 7.2692886, lng: 80.6048468, image:"images/senakaa.jpg"},
+      {name: "New Akbar Hostel", cap: 136, gender: "Male", lat: 7.2513864, lng: 80.5931248, image:"images/newakbar.jpg"},
+      {name: "Hindagal Hostel", cap: 57, gender: "Male", lat: 7.2419534, lng: 80.5989913, image:"images/hidaga.jpg"},
+      {name: "Lalith Athulathmudali Hostel", cap: 380, gender: "Female", lat: 7.2608648, lng: 80.6035143, image:"images/falith.jpg"},
+      {name: "Sarasaviuyana Hostel", cap: 146, gender: "Female", lat: 7.2654228, lng: 80.6009324, image:"images/uyana.jpg"},
+      {name: "Ramanathan Hostel", cap: 1215, gender: "Female", lat: 7.2461087, lng: 80.597343, image:"images/ramanathan.jpg"},
+      {name: "Sangamiththa Hostel", cap: 656, gender: "Female", lat: 7.2491516, lng: 80.5973559, image:"images/sangamitta.jpg"},
+      {name: "Wijewardana Hostel", cap: 804, gender: "Female", lat: 7.2609049, lng: 80.5994223, image:"images/wije.jpg"},
+      {name: "Hilda Obeysekara Hostel", cap: 656, gender: "Female", lat: 7.250442, lng: 80.5968362, image:"images/hilda.jpg"},
+      {name: "Ediriweera Sarathchandra & Gunapala Malalasekara Hostel", cap: 647, gender: "Female", lat: 7.2505678, lng: 80.5942954, image:"images/ediriweera-sarachchandra.jpg"},
+      {name: "Mahakanda Hostel", cap: 342, gender: "Female", lat: 7.2271831, lng: 80.6079637, image:"images/older.jpg"},
+      {name: "Sarasavi Medura Hostel", cap: 752, gender: "Female", lat: 7.2461622, lng: 80.5961984, image:"images/sarasavi.jpg"},
+      {name: "Mahailukpallama Boys Hostel", cap: 100, gender: "Male", lat: 8.0965743, lng: 80.4475949, image:"images/mhailuk.jpg"},
+      {name: "Mahailukpallama Girls Hostel", cap: 200, gender: "Female", lat: 8.0967935, lng: 80.4460204, image:"images/newakbar.jpg"}
     ];
 
     const map = L.map('map').setView([7.253, 80.596], 15);
@@ -137,15 +137,14 @@
         Type: ${h.gender}<br>
         <a href="${h.image}" target="_blank">
           <img src="${h.image}" width="150" style="cursor:pointer">
-        </a><br>
-        <a href="https://www.google.com/maps?q=${h.lat},${h.lng}" target="_blank">Go Here</a>
+        </a>
       `);
 
       markers[h.name] = marker;
       hostelSelect.innerHTML += `<option value="${h.name}">${h.name}</option>`;
     });
 
-    // Zoom to hostel on selection
+    // Zoom to hostel and enable See Direction button
     hostelSelect.addEventListener("change", ()=>{
       const selected = hostelSelect.value;
       if(selected && markers[selected]){
@@ -154,7 +153,7 @@
         markers[selected].openPopup();
         goMapsBtn.disabled = false;
         goMapsBtn.onclick = ()=> {
-          window.open(`https://www.google.com/maps?q=${h.lat},${h.lng}`, '_blank');
+          window.open(`https://www.google.com/maps/dir/?api=1&destination=${h.lat},${h.lng}`, '_blank');
         };
       } else {
         goMapsBtn.disabled = true;
