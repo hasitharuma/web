@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Hostels of University of Peradeniya</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    body { margin:0; padding:0; font-family: Arial; }
+
+    /* Top title bar */
+    #title-bar {
+      position: absolute;
+      top:0; left:0; right:0;
+      background-color: #7D1935; /* University theme color */
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      z-index: 1000;
+    }
+
+    /* Map container */
+    #map {
+      position: absolute;
+      top: 60px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    /* Left-side dropdown and button */
+    #sidebar {
+      position: absolute;
+      top: 70px;
+      left: 10px;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      z-index: 1000;
+      width: 220px;
+    }
+
+    #sidebar h3 { margin-top:0; color:#7D1935; font-size:16px; }
+    select, button { width: 100%; margin-top:5px; padding:5px; border-radius:5px; }
+
+    /* Legend */
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      left: 10px;
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    .legend span {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin-right: 5px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="title-bar">Hostels of University of Peradeniya</div>
+
+  <div id="sidebar">
+    <h3>Select Your Hostel</h3>
+    <select id="hostelSelect">
+      <option value="">-- Choose Hostel --</option>
+    </select>
+    <button id="goMapsBtn" disabled>Go to Google Maps</button>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="legend">
+    <div><span style="background: blue"></span> Male/Bikkhu Hostels</div>
+    <div><span style="background: red"></span> Female Hostels</div>
+  </div>
+
+  <script>
+    const hostels = [
+      {name: "Akbar Nell Hostel", cap: 590, gender: "Male", lat: 7.251350307890226, lng: 80.59131675303537, image:"images/akbar-nell.jpg"},
+      {name: "Arunachalam Hostel", cap: 183, gender: "Male", lat: 7.257777849999774, lng: 80.59997152234868, image:"images/arunachalam.jpg"},
+      {name: "AQ 40 Hostel", cap: 30, gender: "Male", lat: 7.269859363092512, lng: 80.60587106652802, image:"images/AQ.jpg"},
+      {name: "Ivor Jennings Hostel", cap: 524, gender: "Male", lat: 7.257145935872212, lng: 80.60213931070716, image:"images/Ivor.jpg"},
+      {name: "James Peiris Hostel", cap: 244, gender: "Male", lat: 7.250249992756303, lng: 80.59809433954291, image:"images/james-peris.jpg"},
+      {name: "Jayathilaka Hostel", cap: 186, gender: "Male", lat: 7.259390935734632, lng: 80.60010036837886, image:"images/jayathilaka.jpg"},
+      {name: "Marcus Fernando Hostel", cap: 246, gender: "Male", lat: 7.250341378857159, lng: 80.5994354051543, image:"images/MFH.jpg"},
+      {name: "Mars Hostel", cap: 234, gender: "Male", lat: 7.262453507880944, lng: 80.60159773769207, image:"images/marrs.jpg"},
+      {name: "Sangaramaya & Kehelpannala Bikkhu Hostel", cap: 123, gender: "Bikkhu", lat: 7.256785746681601, lng: 80.59248767130516, image:"images/sangamaya.jpg"},
+      {name: "Senaka Bibile Hostel", cap: 294, gender: "Male", lat: 7.2692886205444, lng: 80.60484676652806, image:"images/senakaa.jpg"},
+      {name: "New Akbar Hostel", cap: 136, gender: "Male", lat: 7.251386352108106, lng: 80.59312482605048, image:"images/newakbar.jpg"},
+      {name: "Hindagal Hostel", cap: 57, gender: "Male", lat: 7.241953400574267, lng: 80.59899125998696, image:"images/hidaga.jpg"},
+      {name: "Lalith Athulathmudali Hostel", cap: 380, gender: "Female", lat: 7.2608648067558, lng: 80.60351430885622, image:"images/falith.jpg"},
+      {name: "Sarasaviuyana Hostel", cap: 146, gender: "Female", lat: 7.2654227792774435, lng: 80.6009323511846, image:"images/uyana.jpg"},
+      {name: "Ramanathan Hostel", cap: 1215, gender: "Female", lat: 7.246108710516654, lng: 80.59734295648526, image:"images/ramanathan.jpg"},
+      {name: "Sangamiththa Hostel", cap: 656, gender: "Female", lat: 7.249151579902517, lng: 80.59735590933325, image:"images/sangamitta.jpg"},
+      {name: "Wijewardana Hostel", cap: 804, gender: "Female", lat: 7.260904877556568, lng: 80.59942231377367, image:"images/wije.jpg"},
+      {name: "Hilda Obeysekara Hostel", cap: 656, gender: "Female", lat: 7.250441976444684, lng: 80.59683619721461, image:"images/hilda.jpg"},
+      {name: "Ediriweera Sarathchandra & Gunapala Malalasekara Hostel", cap: 647, gender: "Female", lat: 7.250567826153198, lng: 80.59429542262922, image:"images/ediriweera-sarachchandra.jpg"},
+      {name: "Mahakanda Hostel", cap: 342, gender: "Female", lat: 7.227183052233934, lng: 80.6079636933847, image:"images/older.jpg"},
+      {name: "Sarasavi Medura Hostel", cap: 752, gender: "Female", lat: 7.246162196986149, lng: 80.59619835039932, image:"images/sarasavi.jpg"},
+      {name: "Mahailukpallama Boys Hostel", cap: 100, gender: "Male", lat: 8.096574320181638, lng: 80.44759487066037, image:"images/mhailuk.jpg"},
+      {name: "Mahailukpallama Girls Hostel", cap: 200, gender: "Female", lat: 8.096793530607316, lng: 80.44602042517381, image:"images/newakbar.jpg"}
+    ];
+
+    const map = L.map('map').setView([7.253, 80.596], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap contributors' }).addTo(map);
+
+    const markers = {};
+    const hostelSelect = document.getElementById("hostelSelect");
+    const goMapsBtn = document.getElementById("goMapsBtn");
+
+    // Add markers and populate dropdown
+    hostels.forEach(h => {
+      const color = (h.gender.toLowerCase() === "female") ? "red" : "blue";
+      const marker = L.circleMarker([h.lat, h.lng], {
+        radius:10, color:color, fillColor:color, fillOpacity:0.8
+      }).addTo(map);
+
+      marker.bindPopup(`
+        <b>${h.name}</b><br>
+        Capacity: ${h.cap}<br>
+        Type: ${h.gender}<br>
+        <a href="${h.image}" target="_blank">
+          <img src="${h.image}" width="150" style="cursor:pointer">
+        </a><br>
+        <a href="https://www.google.com/maps?q=${h.lat},${h.lng}" target="_blank">Go Here</a>
+      `);
+
+      markers[h.name] = marker;
+      hostelSelect.innerHTML += `<option value="${h.name}">${h.name}</option>`;
+    });
+
+    // Zoom to hostel on selection
+    hostelSelect.addEventListener("change", ()=>{
+      const selected = hostelSelect.value;
+      if(selected && markers[selected]){
+        const h = hostels.find(x=>x.name===selected);
+        map.flyTo([h.lat, h.lng], 18, { duration: 1.5 });
+        markers[selected].openPopup();
+        goMapsBtn.disabled = false;
+        goMapsBtn.onclick = ()=> {
+          window.open(`https://www.google.com/maps?q=${h.lat},${h.lng}`, '_blank');
+        };
+      } else {
+        goMapsBtn.disabled = true;
+      }
+    });
+  </script>
+</body>
+</html>
